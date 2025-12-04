@@ -592,7 +592,18 @@ export interface paths {
          */
         get: operations["list_mcp_servers_v1_mcp_servers_get"];
         put?: never;
-        post?: never;
+        /**
+         * Create Mcp Server
+         * @description Create a new MCPServer CR.
+         *
+         *     Args:
+         *         namespace: The namespace to create the MCP server in
+         *         body: The MCP server creation request
+         *
+         *     Returns:
+         *         MCPServerDetailResponse: The created MCP server details
+         */
+        post: operations["create_mcp_server_v1_mcp_servers_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1616,6 +1627,11 @@ export interface components {
              */
             is_active: boolean;
         };
+        /** AddressModel */
+        AddressModel: {
+            /** Value */
+            value: string;
+        };
         /**
          * AgentCreateRequest
          * @description Request model for creating an agent.
@@ -1829,7 +1845,7 @@ export interface components {
             /** Apiversion */
             apiVersion?: string | components["schemas"]["ark_api__models__models__ValueSource"] | null;
             /** Headers */
-            headers?: components["schemas"]["Header-Input"][] | null;
+            headers?: components["schemas"]["ark_api__models__agents__Header-Input"][] | null;
         };
         /**
          * BaselineEvaluationMetadata
@@ -2808,24 +2824,6 @@ export interface components {
             detail?: components["schemas"]["ValidationError"][];
         };
         /**
-         * Header
-         * @description HTTP header configuration.
-         */
-        "Header-Input": {
-            /** Name */
-            name: string;
-            value: components["schemas"]["HeaderValue-Input"];
-        };
-        /**
-         * Header
-         * @description HTTP header configuration.
-         */
-        "Header-Output": {
-            /** Name */
-            name: string;
-            value: components["schemas"]["HeaderValue-Output"];
-        };
-        /**
          * HeaderValue
          * @description Value configuration for a header.
          */
@@ -2887,6 +2885,22 @@ export interface components {
          * @enum {string}
          */
         InputType: "user" | "messages";
+        /** MCPServerCreateRequest */
+        MCPServerCreateRequest: {
+            /** Name */
+            name: string;
+            /** Namespace */
+            namespace: string;
+            /** Labels */
+            labels?: {
+                [key: string]: string;
+            } | null;
+            /** Annotations */
+            annotations?: {
+                [key: string]: string;
+            } | null;
+            spec: components["schemas"]["MCPServerSpec"];
+        };
         /** MCPServerDetailResponse */
         MCPServerDetailResponse: {
             /** Name */
@@ -2903,14 +2917,15 @@ export interface components {
             annotations?: {
                 [key: string]: string;
             } | null;
-            /** Spec */
-            spec?: {
-                [key: string]: unknown;
-            } | null;
-            /** Status */
-            status?: {
-                [key: string]: unknown;
-            } | null;
+            available?: components["schemas"]["AvailabilityStatus"] | null;
+            /** Address */
+            address?: string | null;
+            /** Transport */
+            transport?: string | null;
+            /** Headers */
+            headers: components["schemas"]["ark_api__models__mcp_servers__Header-Output"][] | null;
+            /** Tool Count */
+            tool_count?: number | null;
         };
         /** MCPServerListResponse */
         MCPServerListResponse: {
@@ -2925,12 +2940,6 @@ export interface components {
             name: string;
             /** Namespace */
             namespace: string;
-            /** Description */
-            description?: string | null;
-            /** Labels */
-            labels?: {
-                [key: string]: string;
-            } | null;
             /** Address */
             address?: string | null;
             /** Annotations */
@@ -2939,14 +2948,21 @@ export interface components {
             } | null;
             /** Transport */
             transport?: string | null;
-            /** Ready */
-            ready?: boolean | null;
-            /** Discovering */
-            discovering?: boolean | null;
-            /** Status Message */
-            status_message?: string | null;
+            available?: components["schemas"]["AvailabilityStatus"] | null;
             /** Tool Count */
             tool_count?: number | null;
+        };
+        /** MCPServerSpec */
+        MCPServerSpec: {
+            /** Transport */
+            transport: string;
+            /** Description */
+            description?: string | null;
+            /** Tools */
+            tools?: string[] | null;
+            address: components["schemas"]["AddressModel"];
+            /** Headers */
+            headers?: components["schemas"]["ark_api__models__mcp_servers__Header-Input"][] | null;
         };
         /**
          * Memory
@@ -3200,7 +3216,7 @@ export interface components {
             /** Baseurl */
             baseUrl: string | components["schemas"]["ark_api__models__models__ValueSource"];
             /** Headers */
-            headers?: components["schemas"]["Header-Input"][] | null;
+            headers?: components["schemas"]["ark_api__models__agents__Header-Input"][] | null;
         };
         /**
          * Override
@@ -3208,7 +3224,7 @@ export interface components {
          */
         "Override-Input": {
             /** Headers */
-            headers: components["schemas"]["Header-Input"][];
+            headers: components["schemas"]["ark_api__models__agents__Header-Input"][];
             /** Resourcetype */
             resourceType: string;
             labelSelector?: components["schemas"]["ark_api__models__agents__LabelSelector"] | null;
@@ -3219,7 +3235,7 @@ export interface components {
          */
         "Override-Output": {
             /** Headers */
-            headers: components["schemas"]["Header-Output"][];
+            headers: components["schemas"]["ark_api__models__agents__Header-Output"][];
             /** Resourcetype */
             resourceType: string;
             labelSelector?: components["schemas"]["ark_api__models__agents__LabelSelector"] | null;
@@ -3805,6 +3821,24 @@ export interface components {
             optional?: boolean | null;
         };
         /**
+         * Header
+         * @description HTTP header configuration.
+         */
+        "ark_api__models__agents__Header-Input": {
+            /** Name */
+            name: string;
+            value: components["schemas"]["HeaderValue-Input"];
+        };
+        /**
+         * Header
+         * @description HTTP header configuration.
+         */
+        "ark_api__models__agents__Header-Output": {
+            /** Name */
+            name: string;
+            value: components["schemas"]["HeaderValue-Output"];
+        };
+        /**
          * LabelSelector
          * @description A label selector is a label query over a set of resources.
          */
@@ -3963,6 +3997,32 @@ export interface components {
             /** Value */
             value?: string | null;
             valueFrom?: components["schemas"]["ark_api__models__evaluators__ValueFrom"] | null;
+        };
+        /** Header */
+        "ark_api__models__mcp_servers__Header-Input": {
+            /** Name */
+            name: string;
+            value: components["schemas"]["ark_api__models__mcp_servers__ValueSource"];
+        };
+        /** Header */
+        "ark_api__models__mcp_servers__Header-Output": {
+            /** Name */
+            name: string;
+            value: components["schemas"]["ark_api__models__mcp_servers__ValueSource"];
+        };
+        /**
+         * ValueSource
+         * @description ValueSource for configuration (supports direct value or valueFrom).
+         */
+        ark_api__models__mcp_servers__ValueSource: {
+            /** Value */
+            value?: string | null;
+            /** Valuefrom */
+            valueFrom?: {
+                [key: string]: {
+                    [key: string]: string;
+                };
+            } | null;
         };
         /**
          * ValueSource
@@ -5240,6 +5300,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MCPServerListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_mcp_server_v1_mcp_servers_post: {
+        parameters: {
+            query?: {
+                /** @description Namespace for this request (defaults to current context) */
+                namespace?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MCPServerCreateRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MCPServerDetailResponse"];
                 };
             };
             /** @description Validation Error */

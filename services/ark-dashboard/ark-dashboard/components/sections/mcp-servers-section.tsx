@@ -20,7 +20,7 @@ import {
 import { DASHBOARD_SECTIONS } from '@/lib/constants';
 import { useDelayedLoading } from '@/lib/hooks';
 import { type MCPServer, mcpServersService } from '@/lib/services';
-import type { MCPServerConfiguration } from '@/lib/services/mcp-servers';
+import type { MCPServerCreateRequest } from '@/lib/services/mcp-servers';
 
 interface McpServersSectionProps {
   namespace: string;
@@ -46,6 +46,7 @@ export const McpServersSection = forwardRef<
       setLoading(true);
       try {
         const data = await mcpServersService.getAll();
+        console.log('Found ', data.length, 'MCP Servers')
         setMcpServers(data);
       } catch (error) {
         console.error('Failed to load MCP servers:', error);
@@ -89,7 +90,7 @@ export const McpServersSection = forwardRef<
   };
 
   const handleSave = async (
-    mcpServer: MCPServerConfiguration,
+    mcpServer: MCPServerCreateRequest,
     edit: boolean,
   ) => {
     try {

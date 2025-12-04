@@ -17,8 +17,7 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /mutate-ark-mckinsey-com-v1alpha1-agent
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -51,8 +50,7 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /validate-ark-mckinsey-com-v1alpha1-agent
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -72,8 +70,7 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /validate-ark-mckinsey-com-v1alpha1-evaluator
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -93,8 +90,7 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /validate-ark-mckinsey-com-v1alpha1-mcpserver
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -114,8 +110,7 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /validate-ark-mckinsey-com-v1alpha1-model
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -135,8 +130,7 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /validate-ark-mckinsey-com-v1alpha1-query
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -156,8 +150,7 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /validate-ark-mckinsey-com-v1alpha1-team
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -172,18 +165,12 @@ webhooks:
         resources:
           - teams
   - name: vtool-v1.kb.io
-    objectSelector:
-      matchExpressions:
-      - key: "ark.mckinsey.com/skip-webhook-validation"
-        operator: "NotIn"
-        values: ["true"]
     clientConfig:
       service:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /validate-ark-mckinsey-com-v1alpha1-tool
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -203,8 +190,7 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /validate-ark-mckinsey-com-v1prealpha1-a2aserver
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1
@@ -224,8 +210,7 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /validate-ark-mckinsey-com-v1prealpha1-executionengine
-    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
-    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
+    failurePolicy: Fail
     sideEffects: None
     admissionReviewVersions:
       - v1

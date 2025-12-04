@@ -1,19 +1,41 @@
 from typing import Any, Dict, List, Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_serializer
 
+from .common import AvailabilityStatus
+
+class ValueSource(BaseModel):
+    """ValueSource for configuration (supports direct value or valueFrom)."""
+    value: Optional[str] = None
+    value_from: Optional[Dict[str, Dict[str, str]]] = Field(None, alias="valueFrom")
+    
+    @model_serializer(mode="plain")
+    def serialize_model(self):
+        """Serialize ValueSource to dict, returning either valueFrom or value."""
+        if self.value_from:
+            return {
+              "valueFrom": self.value_from
+            }
+        else:
+            return {
+                "value": self.value
+            }
+
+class Header(BaseModel):
+    name:str
+    value: ValueSource
 
 class MCPServerResponse(BaseModel):
     name: str
     namespace: str
-    description: Optional[str] = None
-    labels: Optional[Dict[str, str]] = None
+    #description: Optional[str] = None
+    #labels: Optional[Dict[str, str]] = None
     address: Optional[str] = None
     annotations: Optional[Dict[str, str]] = None
     transport: Optional[str] = None
-    ready: Optional[bool] = None
-    discovering: Optional[bool] = None
-    status_message: Optional[str] = None
+    available: Optional[AvailabilityStatus] = None
+    #discovering: Optional[bool] = None
+    #status_message: Optional[str] = None
     tool_count: Optional[int] = None
 
 
@@ -28,8 +50,15 @@ class MCPServerDetailResponse(BaseModel):
     description: Optional[str] = None
     labels: Optional[Dict[str, str]] = None
     annotations: Optional[Dict[str, str]] = None
-    spec: Optional[Dict[str, Any]] = None
-    status: Optional[Dict[str, Any]] = None
+    #spec: Optional[Dict[str, Any]] = None
+    available: Optional[AvailabilityStatus] = None
+    #status: Optional[Dict[str, Any]] = None
+    address: Optional[str] = None
+    transport: Optional[str] = None
+    headers: Optional[List[Header]]
+    #status_message: Optional[str] = None
+    tool_count: Optional[int] = None
+    #tools: Optional[List[Tool]] = None
 
 
 class MCPTransport(BaseModel):
@@ -43,14 +72,9 @@ class MCPTransport(BaseModel):
 class AddressModel(BaseModel):
     value: str
 
-class ValueSource(BaseModel):
-    """ValueSource for configuration (supports direct value or valueFrom)."""
-    value: Optional[str] = None
-    value_from: Optional[Dict[str, Dict[str, str]]] = Field(None, alias="valueFrom")
 
-class Header(BaseModel):
-    name:str
-    value: ValueSource
+
+
 
 class MCPServerSpec(BaseModel):
     transport: str
