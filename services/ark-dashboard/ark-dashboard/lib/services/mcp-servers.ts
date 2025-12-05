@@ -16,30 +16,6 @@ export type MCPHeader =
 export type MCPServer = MCPServerResponse & { id: string };
 export type MCPServerDetail = MCPServerDetailResponse & { id: string };
 
-// MCP Server interface for UI compatibility
-/*export interface MCPServer {
-  id: string;
-  name: string;
-  namespace: string;
-  type?: string;
-  spec?: MCPServerSpec;
-  description?: string;
-  address?: string;
-  transport?: string;
-  available: boolean;
-  discovering?: boolean;
-  status_message?: string;
-  tool_count?: number;
-  annotations?: Record<string, string>;
-}*
-
-
-// MCP Server list response
-interface MCPServerListResponse {
-  items: MCPServer[];
-  count: number;
-}*/
-
 export type DirectHeader = {
   name: string;
   value: {
@@ -58,23 +34,6 @@ export type SecretHeader = {
     };
   };
 };
-
-/*export type Header = DirectHeader | SecretHeader;
-export interface MCPServerSpec {
-  address: {
-    value: string;
-  };
-  description?: string;
-  headers?: Header[];
-  transport: 'http' | 'sse';
-  timeout?: string;
-}
-
-export interface MCPServerConfiguration {
-  name: string;
-  namespace: string;
-  spec: MCPServerSpec;
-}*/
 
 // Service for MCP server operations
 export const mcpServersService = {
@@ -96,11 +55,6 @@ export const mcpServersService = {
       }),
     );
     return mcpservers;
-    // Map the response items to include id for UI compatibility
-    /*return response.items.map(item => ({
-      ...item,
-      id: item.name, // Use name as id for UI compatibility
-    }));*/
   },
 
   async get(mcpServerName: string): Promise<MCPServerDetail | null> {
@@ -132,14 +86,6 @@ export const mcpServersService = {
       id: response.name,
     };
   },
-
-  /*async create(mcpSever: MCPServerConfiguration): Promise<MCPServer> {
-    const response = await apiClient.post<MCPServer>(
-      `/api/v1/mcp-servers`,
-      mcpSever,
-    );
-    return response;
-  },*/
 
   async update(
     mcpServerName: string,
