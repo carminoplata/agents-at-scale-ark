@@ -22,7 +22,8 @@ webhooks:
         name: ark-webhook-service
         namespace: {{ .Release.Namespace }}
         path: /mutate-ark-mckinsey-com-v1alpha1-agent
-    failurePolicy: Fail
+    failurePolicy: {{ .Values.webhook.failurePolicy | default "Fail" }}
+    timeoutSeconds: {{ .Values.webhook.timeoutSeconds | default 10 }}
     sideEffects: None
     admissionReviewVersions:
       - v1
