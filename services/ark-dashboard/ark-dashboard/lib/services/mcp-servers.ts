@@ -2,10 +2,15 @@ import { apiClient } from '@/lib/api/client';
 import type { components } from '@/lib/api/generated/types';
 
 export type MCPServerResponse = components['schemas']['MCPServerResponse'];
-export type MCPServerDetailResponse = components['schemas']['MCPServerDetailResponse'];
-export type MCPServerListResponse = components['schemas']['MCPServerListResponse'];
-export type MCPServerCreateRequest = components['schemas']['MCPServerCreateRequest'];
+export type MCPServerDetailResponse =
+  components['schemas']['MCPServerDetailResponse'];
+export type MCPServerListResponse =
+  components['schemas']['MCPServerListResponse'];
+export type MCPServerCreateRequest =
+  components['schemas']['MCPServerCreateRequest'];
 export type MCPServerSpec = components['schemas']['MCPServerSpec'];
+export type MCPHeader =
+  components['schemas']['ark_api__models__mcp_servers__Header-Output'];
 //export type MCPServerListResponse = components['schemas']['MCPServerListResponse']
 
 export type MCPServer = MCPServerResponse & { id: string };
@@ -34,7 +39,6 @@ interface MCPServerListResponse {
   items: MCPServer[];
   count: number;
 }*/
-
 
 export type DirectHeader = {
   name: string;
@@ -79,15 +83,28 @@ export const mcpServersService = {
     const response =
       await apiClient.get<MCPServerListResponse>(`/api/v1/mcp-servers`);
 
+    const mcpservers = await Promise.all(
+      response.items.map(async item => {
+        if (item.available !== 'True') {
+          const mcp = await mcpServersService.get(item.name);
+          item.available = mcp?.available;
+        }
+        return {
+          ...item,
+          id: item.name,
+        };
+      }),
+    );
+    return mcpservers;
     // Map the response items to include id for UI compatibility
-    return response.items.map(item => ({
+    /*return response.items.map(item => ({
       ...item,
       id: item.name, // Use name as id for UI compatibility
-    }));
+    }));*/
   },
 
   async get(mcpServerName: string): Promise<MCPServerDetail | null> {
-    try{
+    try {
       const response = await apiClient.get<MCPServerDetailResponse>(
         `/api/v1/mcp-servers/${mcpServerName}`,
       );

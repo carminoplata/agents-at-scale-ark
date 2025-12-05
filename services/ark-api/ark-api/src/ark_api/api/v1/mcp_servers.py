@@ -15,7 +15,7 @@ from ...models.mcp_servers import (
     MCPServerUpdateRequest,
     MCPServerDetailResponse
 )
-from ...models.common import extract_availability_from_conditions
+from ...models.common import AvailabilityStatus, extract_availability_from_conditions
 from .exceptions import handle_k8s_errors
 
 logger = logging.getLogger(__name__)
@@ -37,23 +37,19 @@ def mcp_server_to_response(mcp_server: dict) -> MCPServerResponse:
     #discovering = None
     status_message = None
 
-    #for condition in conditions:
-    #    if condition.get("type") == "Ready":
-    #        ready = condition.get("status") == "True"
-    #        if not ready:
-    #            status_message = condition.get("message")
-    #    elif condition.get("type") == "Discovering":
-    #        discovering = condition.get("status") == "True"
-
+    if availability == AvailabilityStatus.FALSE:
+        available_cond = next(filter(lambda c: c.get("type") == "Available", conditions))
+        if available_cond:
+            status_message = available_cond.get("message")
+    
     return MCPServerResponse(
         name=metadata.get("name", ""),
         namespace=metadata.get("namespace", ""),
-        #labels=metadata.get("labels"),
+        status_message=status_message,
         address=resolved_address,
         annotations=metadata.get("annotations"),
         transport=spec.get("transport"),
         available=availability,
-        #discovering=False,
         tool_count=status.get("toolCount")
     )
 
@@ -66,7 +62,7 @@ def mcp_server_to_detail_response(mcp_server: dict) -> MCPServerDetailResponse:
     conditions = status.get("conditions", [])
     availability = extract_availability_from_conditions(conditions, "Available")
     headers = spec.get("headers", [])
-
+    logger.info(f"Spec: {status}")
     return MCPServerDetailResponse(
         name=metadata.get("name", ""),
         namespace=metadata.get("namespace", ""),
@@ -123,7 +119,6 @@ async def create_mcp_server(body: MCPServerCreateRequest, namespace: Optional[st
     async with with_ark_client(namespace, VERSION) as ark_client:
         # Build the MCP server spec
         mcp_server_spec = body.spec.model_dump(exclude_none=True)
-        
         # Create the MCPServerV1alpha1 object
         mcp_server_resource = MCPServerV1alpha1(
             metadata={
@@ -136,7 +131,6 @@ async def create_mcp_server(body: MCPServerCreateRequest, namespace: Optional[st
         )
         
         created_mcp_server = await ark_client.mcpservers.a_create(mcp_server_resource)
-        
         return mcp_server_to_detail_response(created_mcp_server.to_dict())
 
 

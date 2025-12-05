@@ -65,8 +65,6 @@ func (r *MCPServerReconciler) Reconcile(ctx context.Context, req ctrl.Request) (
 
 	// Initialize conditions if empty
 	if len(mcpServer.Status.Conditions) == 0 {
-		r.reconcileCondition(&mcpServer, MCPServerAvailable, metav1.ConditionUnknown,
-			"Initializing", "McpServer availability is being determined")
 		if err := r.reconcileConditionsInitializing(ctx, &mcpServer); err != nil {
 			return ctrl.Result{}, err
 		}
@@ -162,7 +160,7 @@ func (r *MCPServerReconciler) reconcileCondition(mcpServer *arkv1alpha1.MCPServe
 
 // reconcileConditionsInitializing sets initial conditions for a new MCPServer
 func (r *MCPServerReconciler) reconcileConditionsInitializing(ctx context.Context, mcpServer *arkv1alpha1.MCPServer) error {
-	changed1 := r.reconcileCondition(mcpServer, MCPServerAvailable, metav1.ConditionFalse, "Initializing", "MCPServer is being initialized")
+	changed1 := r.reconcileCondition(mcpServer, MCPServerAvailable, metav1.ConditionUnknown, "Initializing", "MCPServer is being initialized")
 	changed2 := r.reconcileCondition(mcpServer, MCPServerDiscovering, metav1.ConditionTrue, "Starting", "Starting tool discovery process")
 	if changed1 || changed2 {
 		return r.updateStatus(ctx, mcpServer)

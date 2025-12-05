@@ -2949,6 +2949,8 @@ export interface components {
             /** Transport */
             transport?: string | null;
             available?: components["schemas"]["AvailabilityStatus"] | null;
+            /** Status Message */
+            status_message?: string | null;
             /** Tool Count */
             tool_count?: number | null;
         };

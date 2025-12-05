@@ -97,8 +97,8 @@ export function McpEditor({
     setTransport(mcpServerData?.transport ?? 'http');
     setDescription(mcpServerData?.description ?? '');
     if (mcpServerData?.headers) {
-      const transformedHeaders: HeaderData[] =
-        mcpServerData?.headers?.map((header: MCPHeader) => {
+      const transformedHeaders: HeaderData[] = mcpServerData?.headers?.map(
+        (header: MCPHeader) => {
           const isSecret = 'valueFrom' in header.value;
 
           return {
@@ -109,7 +109,8 @@ export function McpEditor({
               ? (header as SecretHeader).value.valueFrom.secretKeyRef.name
               : (header as DirectHeader).value.value || '',
           };
-        });
+        },
+      );
       setHeaders(transformedHeaders);
     }
   }, [mcpServer?.name]);

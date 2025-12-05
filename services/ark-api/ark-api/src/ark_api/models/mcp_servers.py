@@ -28,14 +28,11 @@ class Header(BaseModel):
 class MCPServerResponse(BaseModel):
     name: str
     namespace: str
-    #description: Optional[str] = None
-    #labels: Optional[Dict[str, str]] = None
     address: Optional[str] = None
     annotations: Optional[Dict[str, str]] = None
     transport: Optional[str] = None
     available: Optional[AvailabilityStatus] = None
-    #discovering: Optional[bool] = None
-    #status_message: Optional[str] = None
+    status_message: Optional[str] = None
     tool_count: Optional[int] = None
 
 
@@ -50,15 +47,12 @@ class MCPServerDetailResponse(BaseModel):
     description: Optional[str] = None
     labels: Optional[Dict[str, str]] = None
     annotations: Optional[Dict[str, str]] = None
-    #spec: Optional[Dict[str, Any]] = None
     available: Optional[AvailabilityStatus] = None
-    #status: Optional[Dict[str, Any]] = None
     address: Optional[str] = None
     transport: Optional[str] = None
     headers: Optional[List[Header]]
-    #status_message: Optional[str] = None
     tool_count: Optional[int] = None
-    #tools: Optional[List[Tool]] = None
+
 
 
 class MCPTransport(BaseModel):

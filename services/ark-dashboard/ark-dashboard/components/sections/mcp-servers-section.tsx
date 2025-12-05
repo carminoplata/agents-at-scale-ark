@@ -46,7 +46,6 @@ export const McpServersSection = forwardRef<
       setLoading(true);
       try {
         const data = await mcpServersService.getAll();
-        console.log('Found ', data.length, 'MCP Servers')
         setMcpServers(data);
       } catch (error) {
         console.error('Failed to load MCP servers:', error);
